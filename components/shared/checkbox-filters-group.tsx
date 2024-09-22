@@ -71,9 +71,9 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
       )}
 
       <div className="flex flex-col gap-4 max-h-96 pr-2 overflow-auto scrollbar">
-        {list.map((item) => (
+        {list.map((item, i) => (
           <FilterCheckbox
-            key={String(item.value)}
+            key={i}//key={String(item.value)}
             value={item.value}
             text={item.text}
             endAdornment={item.endAdornment}

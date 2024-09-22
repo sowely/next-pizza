@@ -48,8 +48,8 @@ const RangeSlider = React.forwardRef(
                 <SliderPrimitive.Track className="relative h-1 w-full grow overflow-hidden rounded-full bg-primary/20">
                     <SliderPrimitive.Range className="absolute h-full bg-primary" />
                 </SliderPrimitive.Track>
-                {localValues.map((value, index) => (
-                    <React.Fragment key={index}>
+                {localValues.map((value, i) => (
+                    <React.Fragment key={i}>
                         <div
                             className="absolute text-center"
                             style={{
