@@ -1,5 +1,5 @@
 import {create} from "zustand";
-import State from "sucrase/dist/types/parser/tokenizer/state";
+// import State from "sucrase/dist/types/parser/tokenizer/state";
 
 interface State {
     activeId: number; // активный id
