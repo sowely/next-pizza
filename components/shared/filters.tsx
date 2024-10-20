@@ -1,3 +1,4 @@
+'use client';
 import {
 	Title,
 	FilterCheckbox,
@@ -5,12 +6,16 @@ import {
 	CheckboxFiltersGroup,
 } from "@/components/shared";
 import { Input } from "@/components/ui";
+import { useFilterIngredients } from "@/hooks/useFilterIngredients";
 
 interface Props {
 	className?: string;
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
+	const { ingredients, loading } = useFilterIngredients();
+	const items = ingredients.map(({id, name}) => ({id, name}))
+
 	return (
 		<div className={className}>
 			<Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
@@ -38,72 +43,14 @@ export const Filters: React.FC<Props> = ({ className }) => {
 
 			{/* Фильтр ингридиентов */}
 			<CheckboxFiltersGroup
-				title="Ингридиенты"
+				title="Ингредиенты"
 				className="mt-5"
 				limit={6}
-				defaultItems={[
-					{
-						text: 'Сырный соус',
-						value: '1',
-					},
-					{
-						text: 'Моццарелла',
-						value: '2',
-					},
-					{
-						text: 'Чеснок',
-						value: '3',
-					}
-				]}
-				items={[
-					{
-						text: 'Сырный соус',
-						value: '1',
-					},
-					{
-						text: 'Моццарелла',
-						value: '2',
-					},
-					{
-						text: 'Чеснок',
-						value: '3',
-					},
-					{
-						text: 'Солённые огурчики',
-						value: '4',
-					},
-					{
-						text: 'Красный лук',
-						value: '5',
-					},
-					{
-						text: 'Томаты',
-						value: '6',
-					}, {
-						text: 'Сырный соус',
-						value: '7',
-					},
-					{
-						text: 'Моццарелла',
-						value: '8',
-					},
-					{
-						text: 'Чеснок',
-						value: '9',
-					},
-					{
-						text: 'Солённые огурчики',
-						value: '10',
-					},
-					{
-						text: 'Красный лук',
-						value: '11',
-					},
-					{
-						text: 'Томаты',
-						value: '12',
-					},
-				]}
+				loading={loading}
+				defaultItems={
+					items.map((item) => ({ text: item.name, value: String(item.id) })).slice(0, 6)
+				}
+				items={items.map((item) => ({ text: item.name, value: String(item.id) }))}
 			/>
 		</div>
 	);

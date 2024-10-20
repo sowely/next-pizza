@@ -1,5 +1,4 @@
 import { prisma } from "@/prisma/prisma-client";
-import { log } from "console";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -15,8 +14,6 @@ export async function GET(req: NextRequest) {
     },
     take: 5,
   });
-
-  console.log(await prisma.product.findMany({}));
 
   return NextResponse.json(products);
 }
