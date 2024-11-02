@@ -6,6 +6,7 @@ import React from "react";
 import { FilterCheckbox, FilterCheckboxProps } from "./filter-checkbox";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui";
+import { useSet } from "react-use";
 
 interface Props {
 	title: string;
@@ -14,9 +15,11 @@ interface Props {
 	limit?: number;
 	loading?: boolean;
 	searchInputPlaceholder?: string;
-	className?: string;
-	onChange?: (values: string[]) => void;
+	onClickCheckbox?: (id: string) => void;
 	defaultValue?: string[];
+	selectedIds?: Set<string>;
+	className?: string;
+	name?: string;
 }
 
 export const CheckboxFiltersGroup: React.FC<Props> = ({
@@ -27,12 +30,13 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
 	loading,
 	searchInputPlaceholder = "Поиск...",
 	className,
-	onChange,
+	onClickCheckbox,
 	defaultValue,
+	selectedIds
 }) => {
 	const [showAll, setShowAll] = React.useState(false);
 	const [searchValue, setSearchValue] = React.useState("");
-	// const [selected, { add, toggle }] = useSet<string>(new Set([]));
+	const [set, { toggle }] = useSet(new Set([]));
 
 	// const onCheckedChange = (value: string) => {
 	//   toggle(value);
@@ -89,13 +93,12 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
 				{list.map((item, i) => (
 					<FilterCheckbox
 						key={i}
+						name={name}
 						value={item.value}
 						text={item.text}
 						endAdornment={item.endAdornment}
-						// onCheckedChange={() => onCheckedChange(item.value)}
-						onCheckedChange={(value) => console.log(value)}
-						// checked={selected.has(item.value)}
-						checked={!item.value}
+						checked={selectedIds?.has(item.value)}
+						onCheckedChange={() => onClickCheckbox?.(item.value)}
 					/>
 				))}
 			</div>

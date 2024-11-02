@@ -58,6 +58,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
                         ? <div className='flex items-center px-3'>Ничего не найдено</div>
                         : products.map(product => (
                             <Link
+                                key={product.id}
                                 href={`/product/${product.id}`}
                                 onClick={onClickProduct}
                                 className='flex items-center gap-3 px-3 py-2 hover:bg-primary/10 cursor-pointer'>

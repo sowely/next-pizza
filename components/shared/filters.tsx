@@ -7,22 +7,37 @@ import {
 } from "@/components/shared";
 import { Input } from "@/components/ui";
 import { useFilterIngredients } from "@/hooks/useFilterIngredients";
+import React from "react";
 
 interface Props {
 	className?: string;
 }
 
+interface PriceProps {
+	priceFrom: number;
+	priceTo: number;
+}
+
 export const Filters: React.FC<Props> = ({ className }) => {
-	const { ingredients, loading } = useFilterIngredients();
-	const items = ingredients.map(({id, name}) => ({id, name}))
+	const { ingredients, loading, onAddId, selectedIds } = useFilterIngredients();
+	const [prices, setPrice] = React.useState<PriceProps>({ priceFrom: 0, priceTo: 1000 });
+
+	const items = ingredients.map((item) => ({ value: String(item.id), text: item.name }));
+
+	const updatePrice = (name: keyof PriceProps, value: number) => {
+		setPrice({
+			...prices,
+			[name]: value
+		})
+	}
 
 	return (
 		<div className={className}>
 			<Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
 			{/*  Верхние фильтры  */}
 			<div className="flex flex-col gap-4">
-				<FilterCheckbox text="Можно собирать" value="1" />
-				<FilterCheckbox text="Новинки" value="2" />
+				<FilterCheckbox name="col" text="Можно собирать" value="1" />
+				<FilterCheckbox name="new" text="Новинки" value="2" />
 			</div>
 
 			{/* Фильтр цен */}
@@ -35,22 +50,38 @@ export const Filters: React.FC<Props> = ({ className }) => {
 						min={0}
 						max={1000}
 						defaultValue={0}
+						value={String(prices.priceFrom)}
+						onChange={(e) => updatePrice('priceFrom', Number(e.target.value))}
 					/>
-					<Input type="number" min={100} max={1000} placeholder="1000" />
+					<Input 
+						type="number" 
+						min={100} 
+						max={1000} 
+						placeholder="1000" 
+						value={String(prices.priceTo)}
+						onChange={(e) => updatePrice('priceTo', Number(e.target.value))}
+					/>
 				</div>
-				<RangeSlider min={0} max={5000} step={10} value={[0, 5000]} />
+				<RangeSlider 
+					min={0} 
+					max={1000} 
+					step={10} 
+					value={[prices.priceFrom, prices.priceTo]} 
+					onValueChange={([priceFrom, priceTo]) => setPrice({ priceFrom, priceTo })}
+				/>
 			</div>
 
 			{/* Фильтр ингридиентов */}
 			<CheckboxFiltersGroup
 				title="Ингредиенты"
+				name="ingredients"
 				className="mt-5"
 				limit={6}
 				loading={loading}
-				defaultItems={
-					items.map((item) => ({ text: item.name, value: String(item.id) })).slice(0, 6)
-				}
-				items={items.map((item) => ({ text: item.name, value: String(item.id) }))}
+				defaultItems={items.slice(0, 6)}
+				items={items}
+				onClickCheckbox={onAddId}
+				selectedIds={selectedIds}
 			/>
 		</div>
 	);
