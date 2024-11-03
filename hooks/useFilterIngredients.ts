@@ -1,31 +1,31 @@
 'use client';
 import { Api } from "@/services/api-client";
 import { Ingredient } from "@prisma/client";
-import { FileMinus } from "lucide-react";
 import React, { use } from "react";
 import { useSet } from "react-use";
 
 interface ReturnProps {
   ingredients: Ingredient[];
   loading: boolean;
-  selectedIds: Set<string>;
+  selectedIngredients: Set<string>;
   onAddId: (id: string) => void;
 }
 
+
 /**
- * Хук для загрузки списка ингредиентов. 
- * 
+ * Хук для загрузки и управления списком ингредиентов.
+ *
  * @returns {ReturnProps} 
- *   - ingredients: список ингредиентов 
- *   - loading: флаг загрузки 
- *   - selectedIds: множество id выбранных ингредиентов 
- *   - onAddId: функция добавления/удаления id из selectedIds 
+ *   - ingredients: список ингредиентов
+ *   - loading: флаг загрузки
+ *   - selectedIngredients: множество id выбранных ингредиентов
+ *   - onAddId: функция добавления/удаления id из selectedIngredients
  */
 export const useFilterIngredients = (): ReturnProps => {
   const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
 	const [loading, setLoading] = React.useState(false);
 
-  const [selectedIds, { toggle }] = useSet(new Set<string>([]));
+  const [selectedIngredients, { toggle }] = useSet(new Set<string>([]));
 
   React.useEffect(() => {
     // при первой загрузке
@@ -45,5 +45,5 @@ export const useFilterIngredients = (): ReturnProps => {
     fetchIngredients();
   }, []);
   
-  return { ingredients, loading, onAddId: toggle, selectedIds };
+  return { ingredients, loading, onAddId: toggle, selectedIngredients };
 };

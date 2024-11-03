@@ -11,13 +11,13 @@ import { useSet } from "react-use";
 interface Props {
 	title: string;
 	items: FilterCheckboxProps[];
-	defaultItems: FilterCheckboxProps[];
+	defaultItems?: FilterCheckboxProps[];
 	limit?: number;
 	loading?: boolean;
 	searchInputPlaceholder?: string;
 	onClickCheckbox?: (id: string) => void;
 	defaultValue?: string[];
-	selectedIds?: Set<string>;
+	selected?: Set<string>;
 	className?: string;
 	name?: string;
 }
@@ -32,7 +32,8 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
 	className,
 	onClickCheckbox,
 	defaultValue,
-	selectedIds
+	selected, 
+	name
 }) => {
 	const [showAll, setShowAll] = React.useState(false);
 	const [searchValue, setSearchValue] = React.useState("");
@@ -72,7 +73,7 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
 
 	const list = showAll
 		? items.filter((item) => item.text.toLowerCase().includes(searchValue.toLowerCase()))
-		: defaultItems;
+		: (defaultItems || items);
 
 	return (
 		<div className={className}>
@@ -97,7 +98,7 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
 						value={item.value}
 						text={item.text}
 						endAdornment={item.endAdornment}
-						checked={selectedIds?.has(item.value)}
+						checked={selected?.has(item.value)}
 						onCheckedChange={() => onClickCheckbox?.(item.value)}
 					/>
 				))}

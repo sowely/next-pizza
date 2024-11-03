@@ -8,19 +8,37 @@ import {
 import { Input } from "@/components/ui";
 import { useFilterIngredients } from "@/hooks/useFilterIngredients";
 import React from "react";
+import { useSet } from "react-use";
+import qs from "qs";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
 	className?: string;
 }
 
 interface PriceProps {
-	priceFrom: number;
-	priceTo: number;
+	priceFrom?: number;
+	priceTo?: number;
+}
+
+interface QueryFilters extends PriceProps {
+	pizzaTypes: string;
+	sizes: string;
+	ingredients: string;
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
-	const { ingredients, loading, onAddId, selectedIds } = useFilterIngredients();
-	const [prices, setPrice] = React.useState<PriceProps>({ priceFrom: 0, priceTo: 1000 });
+	const router = useRouter();
+	const searchParams = useSearchParams() as unknown as Map<keyof QueryFilters, string>;
+
+	const { ingredients, loading, onAddId, selectedIngredients } = useFilterIngredients();
+
+	const [prices, setPrice] = React.useState<PriceProps>({
+		priceFrom: Number(searchParams.get("priceFrom")) || undefined,
+		priceTo: Number(searchParams.get("priceTo")) || undefined,
+	});
+	const [sizes, { toggle: toggleSizes }] = useSet(new Set<string>(searchParams.get("sizes")?.split(",") || []));
+	const [pizzaTypes, { toggle: togglePizzaTypes }] = useSet(new Set<string>(searchParams.get("pizzaTypes")?.split(",") || []));
 
 	const items = ingredients.map((item) => ({ value: String(item.id), text: item.name }));
 
@@ -31,14 +49,51 @@ export const Filters: React.FC<Props> = ({ className }) => {
 		})
 	}
 
+	React.useEffect(() => {
+		// console.log({ prices, pizzaTypes, sizes, selectedIngredients });
+		const filters = {
+			...prices,
+			pizzaTypes: Array.from(pizzaTypes),
+			sizes: Array.from(sizes),
+			ingredients: Array.from(selectedIngredients)
+		}
+		//  Нужно конвертировать значения filters в адресную строку с помощью qs
+		// console.log(qs.stringify(filters, { arrayFormat: 'comma' }));
+		const query = qs.stringify(filters, { arrayFormat: 'comma' });
+		router.push(`?${query}`, { scroll: false });
+	}, [prices, pizzaTypes, sizes, selectedIngredients]);	
+
 	return (
 		<div className={className}>
 			<Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
 			{/*  Верхние фильтры  */}
-			<div className="flex flex-col gap-4">
-				<FilterCheckbox name="col" text="Можно собирать" value="1" />
-				<FilterCheckbox name="new" text="Новинки" value="2" />
-			</div>
+
+			{/* Фильтр типов теста */}
+			<CheckboxFiltersGroup
+				title="Тип теста"
+				name="pizzaTypes"
+				className="mb-5"
+				onClickCheckbox={togglePizzaTypes}
+				items={[
+					{ text: 'Тонкое', value: 'thin' },
+					{ text: 'Традиционное', value: 'traditional' }
+				]}
+				selected={pizzaTypes}
+			/>
+
+			{/* Фильтр размеров пиццы */}
+			<CheckboxFiltersGroup
+				title="Размеры"
+				name="sizes"
+				className="mt-5"
+				items={[
+					{ text: '20 см', value: '20' },
+					{ text: '30 см', value: '30' },
+					{ text: '40 см', value: '40' }
+				]}
+				onClickCheckbox={toggleSizes}
+				selected={sizes}
+			/>
 
 			{/* Фильтр цен */}
 			<div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
@@ -66,7 +121,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
 					min={0} 
 					max={1000} 
 					step={10} 
-					value={[prices.priceFrom, prices.priceTo]} 
+					value={[prices.priceFrom || 0, prices.priceTo || 1000]} 
 					onValueChange={([priceFrom, priceTo]) => setPrice({ priceFrom, priceTo })}
 				/>
 			</div>
@@ -81,7 +136,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
 				defaultItems={items.slice(0, 6)}
 				items={items}
 				onClickCheckbox={onAddId}
-				selectedIds={selectedIds}
+				selected={selectedIngredients}
 			/>
 		</div>
 	);
