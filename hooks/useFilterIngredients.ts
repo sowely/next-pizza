@@ -21,11 +21,11 @@ interface ReturnProps {
  *   - selectedIngredients: множество id выбранных ингредиентов
  *   - onAddId: функция добавления/удаления id из selectedIngredients
  */
-export const useFilterIngredients = (): ReturnProps => {
+export const useFilterIngredients = (values: string[] = []): ReturnProps => {
   const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
 	const [loading, setLoading] = React.useState(false);
 
-  const [selectedIngredients, { toggle }] = useSet(new Set<string>([]));
+  const [selectedIngredients, { toggle }] = useSet(new Set<string>(values));
 
   React.useEffect(() => {
     // при первой загрузке
@@ -45,5 +45,10 @@ export const useFilterIngredients = (): ReturnProps => {
     fetchIngredients();
   }, []);
   
-  return { ingredients, loading, onAddId: toggle, selectedIngredients };
+  return {
+    ingredients,
+    loading,
+    onAddId: toggle,
+    selectedIngredients,
+  };
 };

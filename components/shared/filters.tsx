@@ -31,7 +31,9 @@ export const Filters: React.FC<Props> = ({ className }) => {
 	const router = useRouter();
 	const searchParams = useSearchParams() as unknown as Map<keyof QueryFilters, string>;
 
-	const { ingredients, loading, onAddId, selectedIngredients } = useFilterIngredients();
+	const { ingredients, loading, onAddId, selectedIngredients } = useFilterIngredients(
+		searchParams.get("ingredients")?.split(",")
+	);
 
 	const [prices, setPrice] = React.useState<PriceProps>({
 		priceFrom: Number(searchParams.get("priceFrom")) || undefined,
@@ -62,6 +64,11 @@ export const Filters: React.FC<Props> = ({ className }) => {
 		const query = qs.stringify(filters, { arrayFormat: 'comma' });
 		router.push(`?${query}`, { scroll: false });
 	}, [prices, pizzaTypes, sizes, selectedIngredients]);	
+
+
+	const setSelectedIngredients = (ids: string[]) => {
+		ids.forEach(selectedIngredients.add);
+	}
 
 	return (
 		<div className={className}>
