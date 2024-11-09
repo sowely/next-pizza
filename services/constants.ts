@@ -1,4 +1,4 @@
 export enum ENDPOINTS {
-  SEARCH_PRODUCTS = "/product/search",
+  SEARCH_PRODUCTS = "/products/search",
   INGREDIENTS = "/ingredients",
 }
