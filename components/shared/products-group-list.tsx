@@ -43,6 +43,7 @@ export const ProductsGroupList: React.FC<Props> = ({
           <ProductCard
             key={product.id}
             id={product.id}
+            count={product.count}
             name={product.name}
             imageUrl={product.imageUrl}
             price={product.price}
