@@ -1,6 +1,21 @@
-import { Container, Filters, ProductsGroupList, Title, TopBar } from "@/components/shared";
+import { ChooseProductModal, Container, Filters, ProductsGroupList, Title, TopBar } from "@/shared/components/shared";
 import { prisma } from "@/prisma/prisma-client";
+import { notFound } from "next/navigation";
 
-export default async function ProductModalPage() {
-    return (<h1>aboba</h1>);
+export default async function ProductModalPage({ params: { id } }: { params: { id: String } }) {
+    const product = await prisma.product.findFirst({
+        where: {
+            id: Number(id)
+        },
+        include: {
+            ingredients: true,
+            items: true
+        }
+    })
+
+    if (!product) {
+        return notFound()
+    }
+
+    return <ChooseProductModal product={product} />
 }
