@@ -1,0 +1,1 @@
+export { calcPizzaTotalPrice } from './calc-pizza-total-price';
