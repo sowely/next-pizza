@@ -4,10 +4,10 @@ import React, { useState } from 'react'
 import { Title, PizzaImage, GroupVariants, IngredientItem } from '.'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '../ui'
-import { mapPizzaType, PizzaSize, pizzaSizes, PizzaType, pizzaTypes } from '@/shared/constants/pizza'
+import { mapPizzaType, PizzaSize, PizzaType, pizzaTypes } from '@/shared/constants/pizza'
 import { Ingredient, ProductItem } from '@prisma/client';
-import { useSet } from 'react-use';
-import { calcPizzaTotalPrice } from '@/shared/lib';
+import { getPizzaDetails } from '@/shared/lib';
+import { usePizzaOptions } from '@/shared/hooks';
 
 type Props = {
     imageUrl: string
@@ -27,27 +27,8 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     onClickAddCart,
     className
 }) => {
-    const [size, setSize] = useState<PizzaSize>(20);
-    const [type, setType] = useState<PizzaType>(1);
-    const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
-
-    const totalPrice = calcPizzaTotalPrice(items, type, size, selectedIngredients, ingredients);
-    const textDetails = `${size} см, ${String(mapPizzaType[type]).toLowerCase()} тесто`;
-
-    const filteredPizzasByType = items.filter(pizza => pizza.pizzaType === type);
-
-    const availablePizzaSizes = pizzaSizes.map(item => ({
-        value: item.value,
-        name: item.name,
-        disabled: !filteredPizzasByType.some(pizza => Number(pizza.size) === Number(item.value))
-    }))
-
-    React.useEffect(() => {
-        const isSameSize = availablePizzaSizes.find(item => size === Number(item.value) && !item.disabled)
-        const availableSize = availablePizzaSizes.find(item => !item.disabled);
-
-        !isSameSize && availableSize && setSize(Number(availableSize?.value) as PizzaSize);
-    }, [type])
+    const { size, type, selectedIngredients, availableSizes: availablePizzaSizes, setSize, setType, addIngredient } = usePizzaOptions(items);
+    const {  textDetails, totalPrice } = getPizzaDetails(items, type, size, selectedIngredients, ingredients);
 
     const handleClickAdd = () => {
         onClickAddCart?.();

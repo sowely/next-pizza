@@ -17,9 +17,9 @@ export const Header: FC<Props> = ({ className }) => {
             {/* Left side */}
             <Link href='/'>
                 <div className='flex items-center gap-4'>
-                    <Image src='/../../public/assets/logo.png' alt='Logo' width={35} height={35} />
+                    <Image src='/logo.png' alt='Logo' width={35} height={35} /> 
                     <div>
-                        <h1 className='text-2xl uppercase font-black'>Next Pizza</h1>
+                        <h1 className='text-2xl uppercase font-black'>Pizza</h1>
                         <p className='text-sm lowercase text-gray-400 leading-3'>Вкусней уже некуда</p>
                     </div>
                 </div>
