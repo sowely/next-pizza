@@ -7,8 +7,8 @@ import {
     SheetFooter,
     SheetHeader,
     SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet"
+    SheetTrigger
+} from "@/shared/components/ui";
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';

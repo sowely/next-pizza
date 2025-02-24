@@ -5,7 +5,7 @@ import { Button } from "../ui";
 import React from "react";
 import { cn } from "@/shared/lib/utils";
 import { CartDrawer } from "./cart-drawer";
-import { SheetTrigger } from "@/components/ui/sheet";
+import { SheetTrigger } from "@/shared/components/ui/sheet";
 
 interface Props {
     className?: string
