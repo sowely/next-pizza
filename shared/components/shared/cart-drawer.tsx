@@ -9,9 +9,10 @@ import {
     SheetTitle,
     SheetTrigger
 } from "@/shared/components/ui";
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { CartDrawerItem } from './cart-drawer-item';
 
 interface Props {
     className?: string;
@@ -28,10 +29,16 @@ export const CartDrawer: React.FC<PropsWithChildren<Props>> = ({ className, chil
                     <SheetTitle>
                         В корзине <span className='font-bold'>{3} товаров</span>
                     </SheetTitle>
-                    <SheetDescription>Description goes here</SheetDescription>
+                    <SheetDescription />
                 </SheetHeader>
 
                 {/* Items */}
+                <div className='-mx-6 overflow-y-auto flex flex-col gap-2'>
+                    <CartDrawerItem id={0} imageUrl={'https://media.dodostatic.net/image/r:233x233/11EE7D61304FAF5A98A6958F2BB2D260.webp'} details={'Традиционное, 20 см'} name={'Pizza'} price={60} quantity={10} />
+                    <CartDrawerItem id={1} imageUrl={'https://media.dodostatic.net/image/r:233x233/11EE7D61304FAF5A98A6958F2BB2D260.webp'} details={'Традиционное, 20 см'} name={'Pizza'} price={60} quantity={10} />
+                    <CartDrawerItem id={2} imageUrl={'https://media.dodostatic.net/image/r:233x233/11EE7D61304FAF5A98A6958F2BB2D260.webp'} details={'Традиционное, 20 см'} name={'Pizza'} price={60} quantity={10} />
+                </div>
+                
 
                 <SheetFooter className='-mx-6 bg-white p-8'>
                     <div className='w-full'>
@@ -41,21 +48,19 @@ export const CartDrawer: React.FC<PropsWithChildren<Props>> = ({ className, chil
                                 Итого
                                 <div className='flex-1 border-b border-dashed border-b-neutral-200 relative -top-1 mx-2' />
                             </span>
+                            <span className='font-bold text-lg'>500 р</span>
                         </div>
 
-                        <span className='font-bold text-lg'>500 р</span>
+                        <Link href='/cart'>
+                            <Button
+                                type='submit'
+                                className='w-full h-12 text-base'
+                            >
+                                Оформить заказ
+                                <ArrowLeft className='w-5 ml-2' />
+                            </Button>
+                        </Link>
                     </div>
-
-                    <Link href={'/cart'}>
-                        <Button
-                            type='submit'
-                            className='w-full h-12 text-base'
-                        >
-                            Оформить заказ
-                            <ArrowRight className='w-5 ml-2' />
-                        </Button>
-                    </Link>
-
                 </SheetFooter>
 
             </SheetContent>
