@@ -96,7 +96,7 @@ model Cart {
 
 	items		CartItem[]
 
-	token		String // Для привяззки корзины незарегистрированному пользователю
+	token		String // Для привязки корзины незарегистрированному пользователю
 
 	totalAmount Int 	@default(0)
 

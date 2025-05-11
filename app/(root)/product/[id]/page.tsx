@@ -33,7 +33,7 @@ export default async function ProductPage({ params: { id } }: { params: { id: st
                     items={[
                         {
                             name: 'Маленькая',
-                            value: '1',
+                            value: '1'
                         }, {
                             name: 'Средняя',
                             value: '2',
